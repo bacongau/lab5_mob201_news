@@ -2,11 +2,14 @@ package com.example.mob204_slide5;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,9 +27,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     Button button;
-    String link = "https://thanhnien.vn/rss/thoi-su/phap-luat.rss";
+    String link = "https://ngoisao.net/rss/showbiz-viet.rss";
+   // String link = "https://thanhnien.vn/rss/thoi-su/phap-luat.rss";
     List<TinTuc> tinTucList = new ArrayList<>();
     ListView listView;
+    EditText edt_url;
+    ArrayList<String> arrayListLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
         button = findViewById(R.id.button);
         listView = findViewById(R.id.listview);
-
+        edt_url = findViewById(R.id.edt_url);
+        edt_url.setText(link);
+        arrayListLink = new ArrayList<>();
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +67,15 @@ public class MainActivity extends AppCompatActivity {
 
                         TinTucAdapter adapter = new TinTucAdapter(MainActivity.this,R.layout.item_tintuc,tinTucList);
                         listView.setAdapter(adapter);
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                              //  Toast.makeText(MainActivity.this, ""+arrayListLink.get(position), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(MainActivity.this, TinTucActivity.class);
+                                intent.putExtra("linktintuc",arrayListLink.get(position));
+                                startActivity(intent);
+                            }
+                        });
 
                     }
                 };
@@ -73,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             // kiem tra link dung hay sai
-            URL url = new URL(link);
+            URL url = new URL(edt_url.getText().toString());
 
             // mo ket noi
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -122,6 +139,10 @@ public class MainActivity extends AppCompatActivity {
                             }
                             if (tag.equalsIgnoreCase("pubDate")) {
                                 tinTuc.pubDate = text;
+                            }
+                            if (tag.equalsIgnoreCase("link")) {
+                                tinTuc.link = text;
+                                arrayListLink.add(text);
                             }
                             if (tag.equalsIgnoreCase("item")) {
                                 tinTucList.add(tinTuc);

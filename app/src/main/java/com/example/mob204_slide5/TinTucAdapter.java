@@ -36,7 +36,7 @@ public class TinTucAdapter extends BaseAdapter {
     }
 
     public class ViewHolder{
-        TextView textView_title,textView_desc;
+        TextView textView_title;
     }
 
     @Override
@@ -47,7 +47,6 @@ public class TinTucAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(layout,null);
             viewHolder.textView_title = convertView.findViewById(R.id.textView_title);
-            viewHolder.textView_desc = convertView.findViewById(R.id.textView_desc);
 
             convertView.setTag(viewHolder);
         }else {
@@ -55,7 +54,6 @@ public class TinTucAdapter extends BaseAdapter {
         }
 
         viewHolder.textView_title.setText(list.get(position).title);
-        viewHolder.textView_desc.setText(list.get(position).description);
 
         return convertView;
     }
